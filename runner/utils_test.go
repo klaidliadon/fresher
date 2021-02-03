@@ -1,6 +1,8 @@
 package runner
 
 import (
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -22,7 +24,7 @@ func TestIsWatchedFile(t *testing.T) {
 		actual := isWatchedFile(test.file)
 
 		if actual != test.expected {
-			t.Errorf("Expected %v, got %v", test.expected, actual)
+			t.Errorf("Expected %v, got %v for %s", test.expected, actual, test.file)
 		}
 	}
 }
@@ -50,25 +52,27 @@ func TestShouldRebuild(t *testing.T) {
 }
 
 func TestIsIgnoredFolder(t *testing.T) {
-	settings["ignored"] = "tmp, assets, app/controllers"
+	settings["ignored"] = strings.Join([]string{
+		"tmp", "assets", filepath.Join("app", "controllers"),
+	}, ", ")
 	tests := []struct {
 		dir      string
 		expected bool
 	}{
 		{"assets", true},
-		{"assets/node_modules", true},
+		{filepath.Join("assets", "node_modules"), true},
 		{"tmp", true},
-		{"tmp/pid", true},
+		{filepath.Join("tmp", "pid"), true},
 		{"app", false},
-		{"app/controllers", true},
-		{"app/controllers/user", true},
-		{"app/views", false},
+		{filepath.Join("app", "controllers"), true},
+		{filepath.Join("app", "controllers", "user"), true},
+		{filepath.Join("app", "views"), false},
 	}
 
 	for _, test := range tests {
-		actual := isIgnoredFolder(test.dir)
+		actual := isIgnoredFolder(filepath.Clean(test.dir))
 		if actual != test.expected {
-			t.Errorf("Expected %v, got %v", test.expected, actual)
+			t.Errorf("Expected %v, got %v for %s", test.expected, actual, test.dir)
 		}
 	}
 }

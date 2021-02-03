@@ -6,8 +6,9 @@ import (
 	"strings"
 )
 
-func initFolders() {
+const _Separator = string(filepath.Separator)
 
+func initFolders() {
 	runnerLog("InitFolders")
 
 	path := tmpPath()
@@ -16,12 +17,10 @@ func initFolders() {
 
 	if _, errDir := os.Stat(path); os.IsNotExist(errDir) {
 		err := os.Mkdir(path, 0755)
-
 		if err != nil {
 			runnerLog(err.Error())
 		}
 	}
-
 }
 
 func isTmpDir(path string) bool {
@@ -32,13 +31,13 @@ func isTmpDir(path string) bool {
 }
 
 func isIgnoredFolder(path string) bool {
-	paths := strings.Split(path, "/")
+	paths := strings.Split(path, _Separator)
 	if len(paths) <= 0 {
 		return false
 	}
 
 	for _, e := range strings.Split(settings["ignored"], ",") {
-		ignoredPaths := strings.Split(strings.TrimSpace(e), "/")
+		ignoredPaths := strings.Split(strings.TrimSpace(e), _Separator)
 		if len(ignoredPaths) <= len(paths) {
 			i := 0
 			for ; i < len(ignoredPaths); i++ {
@@ -57,8 +56,7 @@ func isIgnoredFolder(path string) bool {
 func isWatchedFile(path string) bool {
 	absolutePath, _ := filepath.Abs(path)
 	absoluteTmpPath, _ := filepath.Abs(tmpPath())
-
-	if strings.HasPrefix(absolutePath, absoluteTmpPath+"/") {
+	if strings.HasPrefix(absolutePath, absoluteTmpPath+_Separator) {
 		return false
 	}
 
@@ -101,6 +99,8 @@ func createBuildErrorsLog(message string) bool {
 
 func removeBuildErrorsLog() error {
 	err := os.Remove(buildErrorsFilePath())
-
+	if os.IsNotExist(err) {
+		return nil
+	}
 	return err
 }

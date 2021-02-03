@@ -21,10 +21,10 @@ const (
 
 var settings = map[string]string{
 	"version":           "1",
-	"config_path":       "./.fresher.yaml",
+	"config_path":       filepath.Join(".", ".fresher.yaml"),
 	"root":              ".",
 	"main_path":         "",
-	"tmp_path":          "./tmp",
+	"tmp_path":          filepath.Join(".", "tmp"),
 	"build_name":        "runner-build",
 	"build_args":        "",
 	"build_log":         "runner-build-errors.log",
@@ -84,11 +84,9 @@ func loadEnvSettings() {
 			settings[key] = value
 		}
 	}
-
 }
 
 func loadRunnerConfigSettings() {
-
 	cfgPath := configPath()
 
 	if _, err := os.Stat(cfgPath); err != nil {
@@ -98,7 +96,6 @@ func loadRunnerConfigSettings() {
 	logger.Printf("Loading settings from %s", cfgPath)
 
 	file, err := ioutil.ReadFile(cfgPath)
-
 	if err != nil {
 		panic(err)
 	}
@@ -114,12 +111,24 @@ func loadRunnerConfigSettings() {
 	for key, value := range givenSettings {
 		settings[key] = value
 	}
+}
 
+func rootFix() {
+	root := settings["root"]
+	if filepath.IsAbs(root) {
+		return
+	}
+	wd, err := os.Getwd()
+	if err != nil {
+		return
+	}
+	settings["root"] = filepath.Join(wd, root)
 }
 
 func initSettings() {
 	loadEnvSettings()
 	loadRunnerConfigSettings()
+	rootFix()
 }
 
 func getenv(key, defaultValue string) string {
@@ -177,7 +186,6 @@ func buildDelay() time.Duration {
 }
 
 func mustUseDelve() bool {
-
 	var b bool
 	var err error
 
@@ -186,7 +194,6 @@ func mustUseDelve() bool {
 	}
 
 	return b
-
 }
 
 func delveArgs() string {
