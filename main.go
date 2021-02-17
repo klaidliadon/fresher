@@ -17,12 +17,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/roger-russel/fresher/runner"
+	"github.com/klaidliadon/fresher/runner"
 )
 
-var version string
-var commit string
-var date string
+var (
+	version string
+	commit  string
+	date    string
+)
 
 func main() {
 	configPath := flag.String("c", "", "config file path")

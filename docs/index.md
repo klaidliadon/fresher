@@ -1,6 +1,6 @@
 # Fresher
 
-![download](https://img.shields.io/github/downloads/roger-russel/fresher/total.svg)
+![download](https://img.shields.io/github/downloads/klaidliadon/fresher/total.svg)
 
 Fresher is a command-line tool that builds and (re)starts your web application every time you save a Go or template file. It is like resh but fresher.
 
@@ -10,7 +10,7 @@ If the web framework you are using supports the Fresher runner, it will show bui
 
 ## Installation
 
-    go get github.com/roger-russel/fresher
+    go get github.com/klaidliadon/fresher
 
 ## Usage
 
@@ -52,7 +52,7 @@ log_color_watcher: magenta
 log_color_app:
 ```
 
-More examples can be seen [here](https://github.com/roger-russel/fresher/tree/master/docs/_examples)
+More examples can be seen [here](https://github.com/klaidliadon/fresher/tree/master/docs/_examples)
 
 To see ther fresher version run
 ```bash

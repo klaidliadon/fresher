@@ -7,4 +7,4 @@ name = "go"
 enabled = true
 
   [analyzers.meta]
-  import_paths = ["github.com/roger-russel/fresher"]
+  import_paths = ["github.com/klaidliadon/fresher"]

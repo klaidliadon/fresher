@@ -1,4 +1,4 @@
-module github.com/roger-russel/fresher
+module github.com/klaidliadon/fresher
 
 go 1.13
 
